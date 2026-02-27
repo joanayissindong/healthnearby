@@ -98,7 +98,7 @@ VITE_API_URL=http://localhost:5000
 **server/.env**
 ```
 PORT=5000
-DATABASE_URL=postgresql://sudojayn@localhost:5432/healthnearby
+DATABASE_URL=postgresql://sudojayn:Healthnearby@localhost:5432/healthnearby
 NODE_ENV=development
 CLIENT_URL=http://localhost:5173
 ```
