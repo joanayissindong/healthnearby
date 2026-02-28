@@ -38,9 +38,9 @@ class PostgresFacilityRepository extends IFacilityRepository {
         if (on_duty) { conditions.push(`(f.is_on_duty = TRUE OR f.is_24h = TRUE)`); }
 
         const result = await pool.query(
-            `SELECT f.*, ARRAY_AGG(fs.services) AS services
+            `SELECT f.*, ARRAY_AGG(fs.service) AS services
             FROM facilities f
-            LEFT JOIN facilities_services fs ON fs.facility_id = f.id
+            LEFT JOIN facility_services fs ON fs.facility_id = f.id
             WHERE ${conditions.join(' AND ')}
             GROUP BY f.id ORDER BY f.name`,
             params

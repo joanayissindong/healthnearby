@@ -1,4 +1,4 @@
-const ALLOWED_TYPES = ['hospital', 'clinic', 'pharmacy', 'laboratory', 'healthcenter'];
+const ALLOWED_TYPES = ['hospital', 'clinic', 'pharmacy', 'laboratory', 'health_center'];
 
 class FacilityType {
     constructor(value) {

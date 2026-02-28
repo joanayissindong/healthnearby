@@ -8,9 +8,7 @@ class SearchFacilitiesUseCase {
 
     async execute (searchQueryDTO) {
         const facilities = await this.facilityRepository.search(searchQueryDTO);
-        const chain = FilterChain.buildFrom(searchQueryDTO);
-        const filtered = chain.apply(facilities);
-        return filtered.map(FacilityMapper.toResponseDTO);
+        return facilities.map(FacilityMapper.toResponseDTO);
     }
 }
 
