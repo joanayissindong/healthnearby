@@ -33,10 +33,10 @@ In Cameroon, only 7.9% of the population has health insurance. Finding the right
 | Layer                      | Technology                 |
 |----------------------------|----------------------------|
 | Frontend                   | React + TailwindCSS (Vite) |
-| Backend                    | Node.js + Express          |
+| Backend                    | Node.js + Express REST API |
 | Database                   | PostgreSQL                 |
 | Deployment (frontend)      | Vercel                     |
-| Deployment (backend)       | Render                     |
+| Deployment (backend)       | Vercel (serverless)        |
 | Deployment (database)      | Neon                       |
 
 ---
