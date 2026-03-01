@@ -12,6 +12,11 @@ app.use(requestLogger);
 
 app.use('/api/v1/facilities', facilityRoutes);
 
+// Health check endpoint — used by Render to monitor the service
+app.get('/api/v1/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.use(errorHandler);
 
 module.exports = app;
