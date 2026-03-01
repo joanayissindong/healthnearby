@@ -2,7 +2,9 @@
 
 > Find healthcare facilities near you in Cameroon — hospitals, clinics, pharmacies, and laboratories — with real-time open/closed status and Mobile Money payment information.
 
-🔗 **Live demo:** coming soon
+🔗 **Live demo:** https://healthnearby-8kw8-5wk9s0tpu-joanayissindongs-projects.vercel.app         
+🔗 **API:** https://healthnearby.vercel.app
+
 💻 **Author:** Joan Wilfried AYISSI NDONG · Douala, Cameroon
 
 ---
