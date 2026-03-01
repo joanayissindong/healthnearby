@@ -1,77 +1,121 @@
 # 🏥 HealthNearby
 
-> Find healthcare facilities near you in Cameroon — hospitals, clinics, pharmacies, and laboratories — with real-time open/closed status and Mobile Money payment information.
+> Find healthcare facilities in Cameroon — with real-time open/closed status and Mobile Money filters.
 
-🔗 **Live demo:** https://healthnearby-8kw8.vercel.app 
+**It is 11 PM in Bépanda, Douala. A mother's child has a fever that won't break. She needs a pharmacy — open right now, that accepts MTN MoMo. She has no app to check. She starts calling neighbors.**
 
-🔗 **API:** https://healthnearby.vercel.app
+HealthNearby was built to end that walk.
 
-
-💻 **Author:** Joan Wilfried AYISSI NDONG · Douala, Cameroon
-
----
-
-## 🎯 Problem
-
-In Cameroon, only 7.9% of the population has health insurance. Finding the right facility — open right now, accepts MTN MoMo, runs the right test — relies entirely on word of mouth. HealthNearby fixes that.
+🔗 **Live demo:** https://healthnearby-8kw8.vercel.app
+💻 **API:** https://healthnearby.vercel.app/api/v1/facilities
+📝 **DEV.to article:** https://dev.to/joanayissindong/healthnearby-find-healthcare-facilities-in-cameroon
 
 ---
 
-## ✨ Features
+## The Problem
 
-- 🔍 Search by city (Douala, Yaoundé)
-- 🏷️ Filter by facility type (hospital, clinic, pharmacy, laboratory)
-- 💸 Filter by payment method (MTN MoMo, Orange Money)
-- 🕐 Real-time open/closed status based on current local time
-- 📞 One-tap call button — native mobile experience
-- 📱 Fully responsive: mobile → tablet → desktop
+- **7.9%** of Cameroonians have health insurance — 92.1% navigate the system entirely on their own
+- **70%** of all healthcare spending comes directly from households
+- **19.5 million** active Mobile Money accounts — yet no way to filter facilities by payment method
+- On-duty pharmacy rotations are published only in local newspapers — inaccessible at 11 PM
 
----
+The facilities exist. The payment infrastructure exists. **What's missing is the information layer.**
 
-## 🛠️ Tech Stack
-
-| Layer                      | Technology                 |
-|----------------------------|----------------------------|
-| Frontend                   | React + TailwindCSS (Vite) |
-| Backend                    | Node.js + Express REST API |
-| Database                   | PostgreSQL                 |
-| Deployment (frontend)      | Vercel                     |
-| Deployment (backend)       | Vercel (serverless)        |
-| Deployment (database)      | Neon                       |
+HealthNearby is that information layer.
 
 ---
 
-## 🏗️ Architecture
+## Features
 
-This project follows **Clean Architecture** combined with **Domain-Driven Design (DDD)** principles.
+| Feature | Description |
+|---|---|
+| 🔍 **Search** | By city (Douala, Yaoundé) and facility type |
+| 💛 **MTN MoMo filter** | Find facilities that accept Mobile Money |
+| 🟠 **Orange Money filter** | Same for Orange Money users |
+| 🌙 **On-duty filter** | Surface pharmacies open late at night |
+| 🕐 **Real-time status** | Open/closed computed from current local time — no manual updates |
+| 📞 **One-tap call** | Native `tel:` link, works on any Android phone |
+| 📱 **Mobile-first** | Designed for low-end Android phones first |
+
+---
+
+## Tech Stack
+
+| Layer | Technology | Hosting |
+|---|---|---|
+| Frontend | React + TailwindCSS (Vite) | Vercel |
+| Backend | Node.js + Express REST API | Vercel (serverless) |
+| Database | PostgreSQL — 20 seeded facilities | Neon |
+
+---
+
+## Architecture
+
+This project follows **Clean Architecture** combined with **Domain-Driven Design (DDD)**, with strict dependency rules between layers.
 
 ```
-Presentation  →  Controllers, Routes
-Application   →  Use Cases, DTOs, Mappers, Filters
-Domain        →  Entities, Value Objects, Repository Interfaces
-Infrastructure → PostgreSQL, Repository Implementations, Seeders
+Presentation   →  Controllers · Routes · Middleware
+Application    →  Use Cases · DTOs · Mappers · Filters
+Domain         →  Entities · Value Objects · Repository Interfaces
+Infrastructure →  PostgreSQL · Repository Implementations · Seeders
 ```
 
-**Design patterns used:** Repository, Use Case, DTO, Factory, Value Object, Strategy, Mapper.
+**Golden rule:** the Domain layer has zero external dependencies. It does not know about PostgreSQL, Express, or React.
+
+### Design Patterns
+
+| Pattern | Role |
+|---|---|
+| **Repository** | Abstracts data access behind an interface — swap the DB without touching business logic |
+| **Use Case** | One class = one business action, fully testable in isolation |
+| **Value Object** | `OpeningHours` computes real-time open/closed status — immutable, no cron job needed |
+| **Strategy** | Filters are composable strategies chained via `FilterChain` |
+| **DTO** | Clean data contracts between layers |
+| **Factory** | Builds valid `Facility` entities from raw data |
+| **Mapper** | Converts domain entities to response DTOs |
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 healthnearby/
-├── client/                  # React frontend
-└── server/
+├── client/                        # React frontend (Vite)
+│   └── src/
+│       ├── components/
+│       │   ├── facility/          # FacilityCard, FacilityList, FacilityDetail
+│       │   ├── search/            # SearchBar, FilterBar
+│       │   ├── layout/            # Header, Footer
+│       │   └── ui/                # Badge, StatusIndicator, CallButton, Loader
+│       ├── pages/                 # HomePage, FacilityDetailPage, NotFoundPage
+│       ├── hooks/                 # useFacilities, useFacilityDetail
+│       ├── services/              # facilityApiService
+│       └── utils/                 # openingHoursHelper, formatHelper
+│
+└── server/                        # Node.js + Express backend
     └── src/
-        ├── domain/          # Entities, Value Objects, Repository interfaces
-        ├── application/     # Use Cases, DTOs, Mappers, Filters
-        ├── infrastructure/  # PostgreSQL, Repository implementations
-        └── presentation/    # Controllers, Routes, Middleware
+        ├── domain/                # Entities, Value Objects, Repository interfaces
+        ├── application/           # Use Cases, DTOs, Mappers, Filters
+        ├── infrastructure/        # PostgreSQL, Repository implementations, Seeds
+        └── presentation/          # Controllers, Routes, Middleware
 ```
 
 ---
 
-## 🚀 Getting Started
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/facilities` | All facilities |
+| GET | `/api/v1/facilities/search?city=douala&type=pharmacy&mtn_momo=true` | Search with filters |
+| GET | `/api/v1/facilities/:id` | One facility by ID |
+| GET | `/api/v1/facilities/meta/cities` | Available cities |
+| GET | `/api/v1/facilities/meta/types` | Available types |
+| GET | `/api/v1/health` | Health check |
+
+---
+
+## Getting Started Locally
 
 ### Prerequisites
 
@@ -105,59 +149,67 @@ PORT=5000
 DATABASE_URL=postgresql://sudojayn:Healthnearby@localhost:5432/healthnearby
 NODE_ENV=development
 CLIENT_URL=http://localhost:5173
+
 ```
 
 ### Database setup
 
 ```bash
+# Create the database
 createdb healthnearby
+
+# Run migration
 psql -d healthnearby -f server/src/infrastructure/database/migrations/001_create_facilities.sql
+
+# Seed 20 facilities
 node server/src/infrastructure/database/seeds/facilities.seed.js
 ```
 
 ### Run locally
 
 ```bash
-# Start the backend (from /server)
+# Backend (from /server)
 npm run dev
 
-# Start the frontend (from /client)
+# Frontend (from /client)
 npm run dev
 ```
 
 ---
 
-## 📡 API Endpoints
+## Data
 
-| Method | Endpoint                                                            | Description           |
-|--------|---------------------------------------------------------------------|-----------------------|
-| GET    | `/api/v1/facilities`                                                | All facilities        |
-| GET    | `/api/v1/facilities/search?city=douala&type=pharmacy&mtn_momo=true` | Search with filters   |
-| GET    | `/api/v1/facilities/:id`                                            | One facility by ID    |
-| GET    | `/api/v1/facilities/meta/cities`                                    | Available cities      |
-| GET    | `/api/v1/facilities/meta/types`                                     | Available types       |
+20 healthcare facilities across **Douala** (15) and **Yaoundé** (5):
 
----
+| Type | Count |
+|---|---|
+| Hospitals | 4 |
+| Clinics | 5 |
+| Pharmacies | 6 |
+| Laboratories | 3 |
+| Community health centers | 2 |
 
-## 📦 Data
-
-20 healthcare facilities across **Douala** (15) and **Yaoundé** (5), covering hospitals, clinics, pharmacies, laboratories, and community health centers.
+Each facility includes: name, type, city, district, address, phone, opening hours, services, and accepted payment methods (Cash, MTN MoMo, Orange Money, Insurance).
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
-- [ ] GPS-based geolocation search
-- [ ] Expand to more Cameroonian cities
+- [ ] GPS-based geolocation — show facilities closest to current position
+- [ ] Expand to Bafoussam, Bamenda, Garoua and more Cameroonian cities
+- [ ] On-duty pharmacy weekly notifications via WhatsApp or SMS
 - [ ] Facility self-registration portal
-- [ ] Mobile app (React Native)
+- [ ] Patient reviews and ratings
+- [ ] Expand to Gabon, Congo, Côte d'Ivoire
+- [ ] Health access analytics dashboard for NGOs and health agencies
 
 ---
 
-## 📄 License
+## License
 
 MIT
 
 ---
 
-*Built with ❤️ from Yaoundé, Cameroon · DEV Weekend Challenge 2026*
+*Built with ❤️ from Yaoundé, Cameroon*
+*Joan Wilfried AYISSI NDONG · DEV Weekend Challenge 2026*
