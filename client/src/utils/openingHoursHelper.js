@@ -5,5 +5,5 @@ export function isOpenNow(hours) {
 }
 
 export function getStatusLabel(hours) {
-    return isOpenNow(hours) ? 'Open now' : 'Close';
+    return isOpenNow(hours) ? 'Open now' : 'Closed';
 }

@@ -160,4 +160,4 @@ MIT
 
 ---
 
-*Built with ❤️ from Douala, Cameroon · DEV Weekend Challenge 2026*
+*Built with ❤️ from Yaoundé, Cameroon · DEV Weekend Challenge 2026*

@@ -30,7 +30,7 @@ export default function HomePage() {
                 <FilterBar filters={filters} onChange={handleFilterChange} />
             </div>
             <p className="text-sm text-gray-500">
-                {facilities.length} facility(ies) found
+                {facilities.length === 1 ? "1 facility found" : `${facilities.length} facilities found`}
             </p>
             <FacilityList facilities={facilities} loading={loading} error={error} />
         </main>
