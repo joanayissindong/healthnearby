@@ -16,7 +16,7 @@ class FacilityFactory {
             phone: new PhoneNumber(row.phone),
             hours: new OpeningHours({
                 weekdays: row.hours_weekdays,
-                saturday: row.hours_saturdays,
+                saturday: row.hours_saturday,
                 sunday: row.hours_sunday,
                 is_24h: row.is_24h,
                 is_on_duty: row.is_on_duty,

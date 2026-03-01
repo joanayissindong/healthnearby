@@ -6,7 +6,8 @@ class OnDutyFilter {
     apply(facilities) {
         if (!this.on_duty) return facilities;
         return facilities.filter(
-            f => f.hours.is_on_duty || f.hours.is_24h        );
+            f => f.hours.is_on_duty || f.hours.is_24h
+        );
     }
 }
 
